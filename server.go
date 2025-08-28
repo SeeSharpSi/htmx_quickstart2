@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"flag"
 	"log"
@@ -10,7 +9,8 @@ import (
 	"os"
 	"strconv"
 
-	"seesharpsi/htmx_template/templ"
+	"seesharpsi/web_roguelike/handlers"
+	"seesharpsi/web_roguelike/session"
 )
 
 func main() {
@@ -26,8 +26,18 @@ func main() {
 		log.Panic(err)
 	}
 
+	sessionManager := session.NewManager()
+
+	h := &handlers.Handler{
+		Manager: sessionManager,
+	}
+
+	// set up mux
 	mux := http.NewServeMux()
-	add_routes(mux)
+	fs := http.FileServer(http.Dir("./static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.HandleFunc("/", h.Index)
+	mux.HandleFunc("/test", h.Test)
 
 	server := http.Server{
 		Addr:    root_ip.Host,
@@ -46,26 +56,3 @@ func main() {
 	}
 }
 
-func add_routes(mux *http.ServeMux) {
-	mux.HandleFunc("/", GetIndex)
-    mux.HandleFunc("/static/{file}", ServeStatic)
-	mux.HandleFunc("/test", GetTest)
-}
-
-func ServeStatic(w http.ResponseWriter, r *http.Request) {
-	file := r.PathValue("file")
-	log.Printf("got /static/%s request\n", file)
-	http.ServeFile(w, r, "./static/"+file)
-}
-
-func GetIndex(w http.ResponseWriter, r *http.Request) {
-	log.Printf("got / request\n")
-	component := templ.Index()
-	component.Render(context.Background(), w)
-}
-
-func GetTest(w http.ResponseWriter, r *http.Request) {
-	log.Printf("got /test request\n")
-	component := templ.Test()
-	component.Render(context.Background(), w)
-}
