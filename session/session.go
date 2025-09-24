@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"seesharpsi/web_roguelike/config"
+	"seesharpsi/htmx_quickstart/config"
 )
 
 // Session holds the state for a single user's story.

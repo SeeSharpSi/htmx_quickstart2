@@ -1,6 +1,6 @@
-# Go HTMX Web Application
+# HTMX Quickstart - Go Web Application
 
-A modern, production-ready web application starter built with Go and HTMX, featuring clean architecture, comprehensive tooling, and best practices.
+A modern, production-ready HTMX quickstart built with Go, featuring clean architecture, comprehensive tooling, and best practices for web development.
 
 ## 🚀 Features
 
@@ -91,7 +91,7 @@ make build
 
 **Run the built binary:**
 ```bash
-./bin/web_roguelike
+./bin/htmx_quickstart
 ```
 
 ### Docker
@@ -218,7 +218,7 @@ docker run -p 9779:8080 --env-file .env my-app
 
 ### Systemd Service (Linux)
 
-Create `/etc/systemd/system/web-roguelike.service`:
+Create `/etc/systemd/system/htmx-quickstart.service`:
 
 ```ini
 [Unit]
@@ -228,8 +228,8 @@ After=network.target
 [Service]
 Type=simple
 User=www-data
-WorkingDirectory=/opt/web-roguelike
-ExecStart=/opt/web-roguelike/bin/web-roguelike
+WorkingDirectory=/opt/htmx-quickstart
+ExecStart=/opt/htmx-quickstart/bin/htmx_quickstart
 Restart=always
 Environment=ENV=production
 

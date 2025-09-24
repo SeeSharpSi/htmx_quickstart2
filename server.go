@@ -9,11 +9,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"seesharpsi/web_roguelike/config"
-	"seesharpsi/web_roguelike/handlers"
-	"seesharpsi/web_roguelike/logger"
-	"seesharpsi/web_roguelike/services"
-	"seesharpsi/web_roguelike/session"
+	"seesharpsi/htmx_quickstart/config"
+	"seesharpsi/htmx_quickstart/handlers"
+	"seesharpsi/htmx_quickstart/logger"
+	"seesharpsi/htmx_quickstart/services"
+	"seesharpsi/htmx_quickstart/session"
 )
 
 // custom404Handler wraps a mux to provide custom 404 pages

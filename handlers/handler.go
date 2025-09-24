@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"seesharpsi/web_roguelike/logger"
-	"seesharpsi/web_roguelike/services"
-	"seesharpsi/web_roguelike/templ"
+	"seesharpsi/htmx_quickstart/logger"
+	"seesharpsi/htmx_quickstart/services"
+	"seesharpsi/htmx_quickstart/templ"
 )
 
 type Handler struct {

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"seesharpsi/web_roguelike/config"
+	"seesharpsi/htmx_quickstart/config"
 )
 
 type contextKey string

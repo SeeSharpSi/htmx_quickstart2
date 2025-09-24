@@ -9,7 +9,7 @@ help: ## Show this help message
 
 # Build commands
 build: ## Build the application
-	go build -o bin/web_roguelike .
+	go build -o bin/htmx_quickstart .
 
 run: ## Run the application
 	go run .
@@ -58,13 +58,9 @@ clean-all: clean ## Clean all artifacts including vendor
 
 # Docker commands
 docker-build: ## Build Docker image
-	docker build -t web-roguelike .
-
-docker-run: ## Run Docker container
-	docker run -p 9779:9779 --env-file .env web-roguelike
-
-docker-dev: ## Run Docker container in development mode
-	docker run -p 9779:9779 -v $(PWD):/app --env-file .env web-roguelike
+	docker build -t htmx-quickstart .
+	docker run -p 9779:9779 --env-file .env htmx-quickstart
+	docker run -p 9779:9779 -v $(PWD):/app --env-file .env htmx-quickstart
 
 # Installation commands
 install-tools: ## Install development tools

@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"net/http"
 
-	"seesharpsi/web_roguelike/logger"
-	"seesharpsi/web_roguelike/session"
+	"seesharpsi/htmx_quickstart/logger"
+	"seesharpsi/htmx_quickstart/session"
 )
 
 // Service defines the interface for business logic operations

@@ -27,7 +27,7 @@ services:
   # db:
   #   image: postgres:15-alpine
   #   environment:
-  #     POSTGRES_DB: web_roguelike
+  #     POSTGRES_DB: htmx_quickstart
   #     POSTGRES_USER: postgres
   #     POSTGRES_PASSWORD: password
   #   ports:
