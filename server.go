@@ -12,6 +12,7 @@ import (
 	"seesharpsi/web_roguelike/config"
 	"seesharpsi/web_roguelike/handlers"
 	"seesharpsi/web_roguelike/logger"
+	"seesharpsi/web_roguelike/services"
 	"seesharpsi/web_roguelike/session"
 )
 
@@ -47,8 +48,12 @@ func main() {
 
 	sessionManager := session.NewManager(cfg)
 
+	// Create service layer with dependencies
+	service := services.NewService(sessionManager, slog.Default())
+
+	// Create handler with injected service
 	h := &handlers.Handler{
-		Manager: sessionManager,
+		Service: service,
 	}
 
 	// set up mux with middleware
