@@ -10,8 +10,8 @@ import (
 
 // Session holds the state for a single user's story.
 type Session struct {
-	ID                string
-	LastAccessed      time.Time
+	ID           string
+	LastAccessed time.Time
 }
 
 // Manager handles the creation, storage, and retrieval of sessions.
@@ -38,7 +38,7 @@ func (m *Manager) CreateSession() string {
 	id := hex.EncodeToString(b)
 
 	m.sessions[id] = &Session{
-		ID:           id,
+		ID: id,
 		//GameState:    &story.GameState{},
 		//StoryHistory: []story.StoryPage{},
 		LastAccessed: time.Now(),
@@ -79,4 +79,3 @@ func (m *Manager) GetOrCreateSession(r *http.Request) (*Session, http.Cookie) {
 	}
 	return m.GetSession(id), newCookie
 }
-
