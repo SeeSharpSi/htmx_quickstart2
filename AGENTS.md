@@ -22,6 +22,13 @@
 - **Configuration File**: Copy `.env.example` to `.env` for local development (automatically loaded)
 - **Validation**: Configuration is validated on startup with detailed error messages
 
+## Code Organization
+- **Dependency Injection**: Services are injected into handlers for testability
+- **Business Logic Separation**: Business logic lives in services, handlers handle HTTP
+- **Context Propagation**: Request contexts are passed through the call chain
+- **Input Validation**: Dedicated validation package with sanitization utilities
+- **Structured Data**: Services return structured data for handlers to use
+
 ## Code Style Guidelines
 - **Formatting**: Use `gofmt` for Go files, `templ fmt` for .templ files
 - **Imports**: Group standard library, third-party, then local imports
@@ -29,6 +36,7 @@
 - **Error Handling**: Return errors, use `errors.Is()` for checking
 - **Structs**: Align fields for readability, use meaningful names
 - **HTTP Handlers**: Follow standard Go patterns with ResponseWriter and Request
-- **Templating**: Use context.Background() for rendering, keep templates clean
+- **Templating**: Use request context for rendering, keep templates clean
 - **Sessions**: Use secure random IDs, HTTP-only cookies, 24h expiration
 - **Logging**: Use structured logging with slog, include request IDs for tracing
+- **Validation**: Use dedicated validation package for input sanitization
