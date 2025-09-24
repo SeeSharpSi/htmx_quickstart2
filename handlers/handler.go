@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"seesharpsi/web_roguelike/logger"
 	"seesharpsi/web_roguelike/session"
@@ -54,4 +55,14 @@ func (h *Handler) NotFound(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+}
+
+func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
+	requestID := logger.RequestIDFromContext(r.Context())
+	slog.Debug("handling health check", "request_id", requestID)
+
+	// Return simple JSON response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"status":"healthy","timestamp":"` + time.Now().Format(time.RFC3339) + `"}`))
 }

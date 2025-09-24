@@ -1,13 +1,20 @@
 # Agent Instructions for Go HTMX Web App
 
 ## Build/Test Commands
-- **Build**: `go build`
-- **Test all**: `go test ./...`
-- **Test single**: `go test -run TestName ./package`
-- **Lint**: `go vet ./...`
-- **Format Go**: `gofmt -w .`
-- **Format Templ**: `templ fmt`
-- **Generate Templ**: `templ generate`
+- **Build**: `go build` or `make build`
+- **Run**: `go run .` or `make run`
+- **Dev with hot reload**: `make dev` (requires air)
+- **Test all**: `go test ./...` or `make test`
+- **Test with coverage**: `make test-cover`
+- **Lint**: `go vet ./...` or `make lint`
+- **Format**: `make fmt`
+- **Install tools**: `make install-tools`
+
+## Development Tools
+- **Hot Reload**: Air configuration (`.air.toml`) for automatic rebuilding
+- **Makefile**: Common development commands in `Makefile`
+- **Docker**: Multi-stage Dockerfile and docker-compose.yml
+- **Health Check**: `/health` endpoint for monitoring
 
 ## Configuration Management
 - **Environment Variables**: All configuration is managed via environment variables

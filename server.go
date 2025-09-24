@@ -57,6 +57,7 @@ func main() {
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/", h.Index)
 	mux.HandleFunc("/test", h.Test)
+	mux.HandleFunc("/health", h.Health)
 
 	// Custom 404 handler for unmatched routes
 	mux.HandleFunc("/404", h.NotFound)
