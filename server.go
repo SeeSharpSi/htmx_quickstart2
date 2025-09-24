@@ -3,16 +3,13 @@ package main
 import (
 	"context"
 	"errors"
-	"flag"
 	"log/slog"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
-	"time"
 
+	"seesharpsi/web_roguelike/config"
 	"seesharpsi/web_roguelike/handlers"
 	"seesharpsi/web_roguelike/logger"
 	"seesharpsi/web_roguelike/session"
@@ -34,23 +31,21 @@ func custom404Handler(mux *http.ServeMux, h *handlers.Handler) http.Handler {
 }
 
 func main() {
-	port := flag.Int("port", 9779, "port the server runs on")
-	address := flag.String("address", "http://localhost", "address the server runs on")
-	flag.Parse()
-
-	// Setup structured logging
-	logger.SetupLogger()
-
-	// ip parsing
-	base_ip := *address
-	ip := base_ip + ":" + strconv.Itoa(*port)
-	root_ip, err := url.Parse(ip)
+	// Load configuration
+	cfg, err := config.Load()
 	if err != nil {
-		slog.Error("failed to parse server address", "error", err, "address", ip)
+		slog.Error("failed to load configuration", "error", err)
 		os.Exit(1)
 	}
 
-	sessionManager := session.NewManager()
+	// Setup structured logging with config
+	logger.SetupLogger(cfg)
+
+	slog.Info("configuration loaded",
+		"server_addr", cfg.GetServerAddr(),
+		"environment", os.Getenv("ENV"))
+
+	sessionManager := session.NewManager(cfg)
 
 	h := &handlers.Handler{
 		Manager: sessionManager,
@@ -69,9 +64,11 @@ func main() {
 	// Wrap with middleware and custom 404 handler
 	handler := logger.PanicRecovery(logger.RequestLogger(custom404Handler(mux, h)))
 
-	server := http.Server{
-		Addr:    root_ip.Host,
-		Handler: handler,
+	server := &http.Server{
+		Addr:         cfg.GetServerAddr(),
+		Handler:      handler,
+		ReadTimeout:  cfg.Server.ReadTimeout,
+		WriteTimeout: cfg.Server.WriteTimeout,
 	}
 
 	// Channel to listen for interrupt signal
@@ -79,7 +76,7 @@ func main() {
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
 	// start server
-	slog.Info("starting server", "address", root_ip.Host)
+	slog.Info("starting server", "address", cfg.GetServerAddr())
 	go func() {
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			slog.Error("server failed to start", "error", err)
@@ -92,7 +89,7 @@ func main() {
 	slog.Info("shutting down server")
 
 	// Graceful shutdown
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.Server.ShutdownTimeout)
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {

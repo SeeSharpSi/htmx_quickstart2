@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"sync"
 	"time"
+
+	"seesharpsi/web_roguelike/config"
 )
 
 // Session holds the state for a single user's story.
@@ -18,12 +20,14 @@ type Session struct {
 type Manager struct {
 	sessions map[string]*Session
 	mutex    sync.Mutex
+	config   *config.Config
 }
 
-// NewManager creates a new session manager.
-func NewManager() *Manager {
+// NewManager creates a new session manager with configuration.
+func NewManager(cfg *config.Config) *Manager {
 	return &Manager{
 		sessions: make(map[string]*Session),
+		config:   cfg,
 	}
 }
 
@@ -60,7 +64,7 @@ func (m *Manager) GetSession(id string) *Session {
 
 // GetOrCreateSession retrieves an existing session or creates a new one.
 func (m *Manager) GetOrCreateSession(r *http.Request) (*Session, http.Cookie) {
-	cookie, err := r.Cookie("session_id")
+	cookie, err := r.Cookie(m.config.Session.CookieName)
 	if err == nil {
 		session := m.GetSession(cookie.Value)
 		if session != nil {
@@ -71,11 +75,13 @@ func (m *Manager) GetOrCreateSession(r *http.Request) (*Session, http.Cookie) {
 	// If no valid session is found, create a new one.
 	id := m.CreateSession()
 	newCookie := http.Cookie{
-		Name:     "session_id",
+		Name:     m.config.Session.CookieName,
 		Value:    id,
-		Expires:  time.Now().Add(24 * time.Hour),
-		HttpOnly: true,
+		Expires:  time.Now().Add(m.config.Session.MaxAge),
+		HttpOnly: m.config.Session.HttpOnly,
+		Secure:   m.config.Session.Secure,
 		Path:     "/",
+		SameSite: http.SameSiteLaxMode, // Default to Lax for now
 	}
 	return m.GetSession(id), newCookie
 }

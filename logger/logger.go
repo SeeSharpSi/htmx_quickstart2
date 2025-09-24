@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"seesharpsi/web_roguelike/config"
 )
 
 type contextKey string
@@ -27,14 +28,42 @@ func ContextWithRequestID(ctx context.Context, requestID string) context.Context
 	return context.WithValue(ctx, requestIDKey, requestID)
 }
 
-// SetupLogger initializes structured logging with JSON format for production
-func SetupLogger() *slog.Logger {
-	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelInfo,
-	})
+// SetupLogger initializes structured logging based on configuration
+func SetupLogger(cfg *config.Config) *slog.Logger {
+	var handler slog.Handler
+
+	opts := &slog.HandlerOptions{
+		Level: parseLogLevel(cfg.Logging.Level),
+	}
+
+	switch cfg.Logging.Format {
+	case "text":
+		handler = slog.NewTextHandler(os.Stdout, opts)
+	case "json":
+		handler = slog.NewJSONHandler(os.Stdout, opts)
+	default:
+		handler = slog.NewJSONHandler(os.Stdout, opts)
+	}
+
 	logger := slog.New(handler)
 	slog.SetDefault(logger)
 	return logger
+}
+
+// parseLogLevel converts string log level to slog.Level
+func parseLogLevel(level string) slog.Level {
+	switch level {
+	case "debug":
+		return slog.LevelDebug
+	case "info":
+		return slog.LevelInfo
+	case "warn":
+		return slog.LevelWarn
+	case "error":
+		return slog.LevelError
+	default:
+		return slog.LevelInfo
+	}
 }
 
 // RequestLogger middleware logs HTTP requests with structured data

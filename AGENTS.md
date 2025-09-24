@@ -9,6 +9,12 @@
 - **Format Templ**: `templ fmt`
 - **Generate Templ**: `templ generate`
 
+## Configuration Management
+- **Environment Variables**: All configuration is managed via environment variables
+- **Environment Support**: Supports development, staging, and production environments via `ENV` variable
+- **Configuration File**: Copy `.env.example` to `.env` for local development (automatically loaded)
+- **Validation**: Configuration is validated on startup with detailed error messages
+
 ## Code Style Guidelines
 - **Formatting**: Use `gofmt` for Go files, `templ fmt` for .templ files
 - **Imports**: Group standard library, third-party, then local imports
@@ -18,3 +24,4 @@
 - **HTTP Handlers**: Follow standard Go patterns with ResponseWriter and Request
 - **Templating**: Use context.Background() for rendering, keep templates clean
 - **Sessions**: Use secure random IDs, HTTP-only cookies, 24h expiration
+- **Logging**: Use structured logging with slog, include request IDs for tracing
